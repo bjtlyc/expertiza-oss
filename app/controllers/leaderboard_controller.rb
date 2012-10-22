@@ -8,21 +8,21 @@ class LeaderboardController < ApplicationController
     session_user_id = @user.id
     # ===> Add something to catch if there isn't a legit user
     #
-    @instructorQuery = LeaderboardHelper.userIsInstructor?(session_user_id)
+    @instructorQuery = LeaderboardHelper.user_is_instructor?(session_user_id)
     
     if @instructorQuery
-      @courseList = LeaderboardHelper.instructorCourses(session_user_id)
+      @course_list = LeaderboardHelper.instructor_courses(session_user_id)
     else
-      @courseList = LeaderboardHelper.studentInWhichCourses(session_user_id)
+      @course_list = LeaderboardHelper.student_in_which_courses(session_user_id)
     end
     
-    @csHash= Leaderboard.getParticipantEntriesInCourses(@courseList, @user.id)
+    @csHash= Leaderboard.getParticipantEntriesInCourses(@course_list, @user.id)
     
 
     @courseAccomp = Hash.new
     if !@instructorQuery
     
-      @courseAccomp = Leaderboard.extractPersonalAchievements(@csHash, @courseList, @user.id)
+      @courseAccomp = Leaderboard.extractPersonalAchievements(@csHash, @course_list, @user.id)
     else
       @csHash = Leaderboard.sortHash(@csHash)
     end
@@ -34,8 +34,8 @@ class LeaderboardController < ApplicationController
     @csHash.each_pair{|qtype, courseHash|
     
        courseHash.each_pair{|course, userGradeArray|
-          courseName = LeaderboardHelper.getCourseName(course)
-          achieveName = LeaderboardHelper.getAchieveName(qtype)
+          courseName = LeaderboardHelper.get_course_name(course)
+          achieveName = LeaderboardHelper.get_achieve_name(qtype)
          
          
           leaderboardHash = Hash.new
@@ -59,7 +59,7 @@ class LeaderboardController < ApplicationController
     if !@instructorQuery
       @courseAccomp.each_pair{ |course, accompHashArray|
          courseAccompListHash = Hash.new      
-         courseAccompListHash[:courseName] = LeaderboardHelper.getCourseName(course)       
+         courseAccompListHash[:courseName] = LeaderboardHelper.get_course_name(course)
          courseAccompListHash[:accompList] = Array.new
          accompHashArray.each {|accompHash|
             courseAccompListHash[:accompList] << accompHash

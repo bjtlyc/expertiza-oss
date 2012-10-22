@@ -19,7 +19,44 @@ module SubmittedContentHelper
                 end
                 ret += "\n      <input type=hidden id='filenames_#{index}' name='filenames[#{index}]' value='#{File.basename(file)}'>"
                 ret += "\n      <input type=hidden id='directories_#{index}' name='directories[#{index}]' value='#{File.dirname(file)}'>"
-                if File.directory?(file)
+		
+		ret=check_directory(file,ret,participant,index)
+                
+		#if File.directory?(file)
+                        #ret += "\n      <a title='Expand/Collapse' href='#' onclick='javascript:collapseSubDirectory(#{index}); return false;'><img id='expand.#{index}' alt='Expand/Collapse' title='Expand/Collapse' src='/images/up.png'></a>&nbsp;"
+                #        ret += link_to File.basename(file), :controller => 'submitted_content', :action => 'edit', :id => participant.id, "current_folder[name]" =>  file
+                        #ret += list_sub_directories(file, participant)
+                #else
+                #        ret += "\n      "
+                #        parentFolder = File.dirname(file)
+                #       if parentFolder != participant.get_path
+                #          parentFolder.sub!(participant.get_path+"/","")
+                #          parentFolder += "/"
+                #        else
+                #          parentFolder = ""
+                #        end
+                        
+                #        location = parentFolder + File.basename(file)
+                #        ret += link_to location, :controller => 'submitted_content', :action => 'download', :id => participant.id, :download => File.basename(file), "current_folder[name]" =>  File.dirname(file)
+                #end
+
+		ret=add_file_attribute(ret,file)
+
+                #ret += "\n   </td>\n   <td valign = top>\n"
+                #ret += File.size(file).to_s
+                #ret += "\n   </td>\n   <td valign = top>\n"
+                #ret += File.ftype(file)
+                #ret += "\n   </td>\n   <td valign = top>\n"
+                #ret += File.mtime(file).to_s
+                #ret += "\n   </td>\n   </tr>"
+                index += 1
+        end
+        ret += "\n</table>"
+        return ret
+  end  
+  
+  def check_directory(file,ret,participant)
+  	if File.directory?(file)
                         #ret += "\n      <a title='Expand/Collapse' href='#' onclick='javascript:collapseSubDirectory(#{index}); return false;'><img id='expand.#{index}' alt='Expand/Collapse' title='Expand/Collapse' src='/images/up.png'></a>&nbsp;"
                         ret += link_to File.basename(file), :controller => 'submitted_content', :action => 'edit', :id => participant.id, "current_folder[name]" =>  file
                         #ret += list_sub_directories(file, participant)
@@ -36,20 +73,9 @@ module SubmittedContentHelper
                         location = parentFolder + File.basename(file)
                         ret += link_to location, :controller => 'submitted_content', :action => 'download', :id => participant.id, :download => File.basename(file), "current_folder[name]" =>  File.dirname(file)
                 end
-                ret += "\n   </td>\n   <td valign = top>\n"
-                ret += File.size(file).to_s
-                ret += "\n   </td>\n   <td valign = top>\n"
-                ret += File.ftype(file)
-                ret += "\n   </td>\n   <td valign = top>\n"
-                ret += File.mtime(file).to_s
-                ret += "\n   </td>\n   </tr>"
-                index += 1
-        end
-        ret += "\n</table>"
-        return ret
-  end  
-  
-  def list_sub_directories (file, participant)
+  end
+
+  def list_sub_directories (file,ret,participant,index)
         index = 0
         ret = "<ul id= 'subdir."+index.to_s+"."+index.to_s+"'>"       
         Dir.foreach( file ) {|path|
@@ -74,6 +100,16 @@ module SubmittedContentHelper
         }
         ret += "</ul>"
   end  
+
+  def add_file_attribute(ret,file)
+	  ret += "\n   </td>\n   <td valign = top>\n"
+          ret += File.size(file).to_s
+          ret += "\n   </td>\n   <td valign = top>\n"
+          ret += File.ftype(file)
+          ret += "\n   </td>\n   <td valign = top>\n"
+          ret += File.mtime(file).to_s
+          ret += "\n   </td>\n   </tr>"
+  end
   
   # Installing RubyZip
   # run the command,  gem install rubyzip

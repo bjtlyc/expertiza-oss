@@ -17,7 +17,7 @@
             class="noSelfRef"
           <% end %>
           >
-          <%= LeaderboardHelper.getUserName(session[:user].id, leadBoard[:sortedGrades][i][0]) %></td>
+          <%= LeaderboardHelper.get_user_name(session[:user].id, leadBoard[:sortedGrades][i][0]) %></td>
           <td
           <% if session[:user].id == leadBoard[:sortedGrades][i][0]%>   
             class="selfRef"

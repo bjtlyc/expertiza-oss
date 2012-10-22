@@ -64,28 +64,48 @@ module FileHelper
   end 
   
   def self.create_directory(in_object)     
-    begin
-      if !File.exists? in_object.get_path
-        FileUtils.mkdir_p(in_object.get_path)
-      end
-    rescue PathError
-      puts $!
-    rescue
-      puts $!
-      raise "An error was encountered while creating this directory: "+$!
-    end   
+    check_file_exists(in_object,true)
+	  #begin
+    #  if !File.exists? in_object.get_path
+    #    FileUtils.mkdir_p(in_object.get_path)
+    #  end
+    #rescue PathError
+    #  puts $!
+    #rescue
+    #  puts $!
+    #  raise "An error was encountered while creating this directory: "+$!
+    #end   
   end  
   
   def self.create_directory_from_path(path)     
-    begin
-      if !File.exists? path
-        FileUtils.mkdir_p(path)
-      end
-    rescue PathError
-      puts $!
-    rescue
-      puts $!
-      raise "An error was encountered while creating this directory: "+$!
-    end   
+    check_file_exists(path,false)
+    #begin
+    #  if !File.exists? path
+    #    FileUtils.mkdir_p(path)
+    #  end
+    #rescue PathError
+    #  puts $!
+    #rescue
+    #  puts $!
+    #  raise "An error was encountered while creating this directory: "+$!
+    #end   
   end   
+  
+  def check_file_exists(object_path,ifobject)
+	 begin
+		if ifobject
+			if !File.exists? object.get_path
+        			FileUtils.mkdir_p(object.get_path)
+			end
+		else 
+        		FileUtils.mkdir_p(object)
+      		end
+   		rescue PathError
+   			puts $!
+   		rescue
+   			puts $!
+   		raise "An error was encountered while creating this directory: "+$!
+   	end
+  end	 
+
 end   
